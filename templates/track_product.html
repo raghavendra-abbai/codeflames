@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Track Product</title>
+</head>
+
+<body>
+
+<h2>Track Product</h2>
+
+<form method="POST">
+Product ID
+<input type="number" name="product_id">
+<button type="submit">Track</button>
+</form>
+
+{% if product %}
+
+<h3>Product Details</h3>
+
+Farmer : {{product.farmer}} <br>
+Crop : {{product.crop}} <br>
+Quantity : {{product.quantity}} <br>
+Price : {{product.price}}
+
+{% endif %}
+
+</body>
+</html>

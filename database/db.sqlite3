@@ -1,0 +1,8 @@
+CREATE TABLE products(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+farmer TEXT,
+crop TEXT,
+quantity INTEGER,
+price INTEGER,
+date TEXT
+);

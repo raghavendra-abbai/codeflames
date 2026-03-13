@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+</head>
+
+<body>
+
+<h2>Supply Chain Dashboard</h2>
+
+<table border="1">
+
+<tr>
+<th>ID</th>
+<th>Farmer</th>
+<th>Crop</th>
+<th>Quantity</th>
+<th>Price</th>
+<th>Date</th>
+</tr>
+
+{% for p in products %}
+
+<tr>
+<td>{{p.id}}</td>
+<td>{{p.farmer}}</td>
+<td>{{p.crop}}</td>
+<td>{{p.quantity}}</td>
+<td>{{p.price}}</td>
+<td>{{p.date}}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>
