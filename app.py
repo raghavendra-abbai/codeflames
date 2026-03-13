@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
 import os
+from PIL import Image
+from PIL.ExifTags import TAGS
 
 app = Flask(__name__)
 
@@ -23,7 +25,6 @@ def init_db():
 
     conn = sqlite3.connect(DATABASE)
 
-    # Farmers table
     conn.execute("""
     CREATE TABLE IF NOT EXISTS farmers(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,7 +35,6 @@ def init_db():
     )
     """)
 
-    # Consumers table
     conn.execute("""
     CREATE TABLE IF NOT EXISTS consumers(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,17 +45,15 @@ def init_db():
     )
     """)
 
-    # Crops table
     conn.execute("""
-CREATE TABLE IF NOT EXISTS crops(
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-farmer_id INTEGER,
-crop_name TEXT,
-price REAL,
-image TEXT,
-status TEXT
-)
-""")
+    CREATE TABLE IF NOT EXISTS crops(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        crop_name TEXT,
+        price REAL,
+        image TEXT,
+        status TEXT
+    )
+    """)
 
     conn.commit()
     conn.close()
@@ -65,13 +63,41 @@ status TEXT
 # Database Connection
 # -----------------------------
 def get_db():
+
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
+
     return conn
 
 
 # -----------------------------
-# Home Page
+# GEO TAG CHECK
+# -----------------------------
+def has_geotag(image_path):
+
+    try:
+
+        image = Image.open(image_path)
+        exif_data = image._getexif()
+
+        if not exif_data:
+            return False
+
+        for tag_id in exif_data:
+
+            tag = TAGS.get(tag_id, tag_id)
+
+            if tag == "GPSInfo":
+                return True
+
+        return False
+
+    except:
+        return False
+
+
+# -----------------------------
+# HOME PAGE
 # -----------------------------
 @app.route("/")
 def index():
@@ -150,7 +176,7 @@ def farmer_dashboard():
 
 
 # -----------------------------
-# ADD CROP (Farmer)
+# ADD CROP
 # -----------------------------
 @app.route("/add_crop", methods=["GET","POST"])
 def add_crop():
@@ -159,20 +185,25 @@ def add_crop():
 
         crop_name = request.form["crop_name"]
         price = request.form["price"]
-        quantity = request.form["quantity"]
-        location = request.form["location"]
-        description = request.form["description"]
 
         image = request.files["image"]
 
         image_path = os.path.join(app.config["UPLOAD_FOLDER"], image.filename)
+
         image.save(image_path)
+
+        # check geo tag
+        if not has_geotag(image_path):
+
+            os.remove(image_path)
+
+            return "<script>alert('Upload geotagged image only');window.history.back();</script>"
 
         conn = get_db()
 
         conn.execute(
-        "INSERT INTO crops (crop_name,price,image,status) VALUES (?,?,?,?)",
-        (crop_name,price,image.filename,"pending")
+            "INSERT INTO crops (crop_name,price,image,status) VALUES (?,?,?,?)",
+            (crop_name,price,image.filename,"pending")
         )
 
         conn.commit()
@@ -181,6 +212,97 @@ def add_crop():
         return redirect("/farmer_dashboard")
 
     return render_template("add_crop.html")
+
+
+# -----------------------------
+# ADMIN LOGIN
+# -----------------------------
+@app.route("/admin_login", methods=["GET","POST"])
+def admin_login():
+
+    if request.method == "POST":
+
+        username = request.form["username"]
+        password = request.form["password"]
+
+        if username == "admin" and password == "admin123":
+            return redirect("/admin_dashboard")
+
+    return render_template("admin_login.html")
+
+
+# -----------------------------
+# ADMIN DASHBOARD
+# -----------------------------
+@app.route("/admin_dashboard")
+def admin_dashboard():
+
+    conn = get_db()
+
+    crops = conn.execute(
+        "SELECT * FROM crops"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template("admin_dashboard.html", crops=crops)
+
+
+# -----------------------------
+# ADMIN VIEW CROPS
+# -----------------------------
+@app.route("/admin_crops")
+def admin_crops():
+
+    conn = get_db()
+
+    crops = conn.execute(
+        "SELECT * FROM crops"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template("admin_crops.html", crops=crops)
+
+
+# -----------------------------
+# APPROVE CROP
+# -----------------------------
+@app.route("/approve_crop/<int:id>")
+def approve_crop(id):
+
+    conn = get_db()
+
+    conn.execute(
+        "UPDATE crops SET status='approved' WHERE id=?",
+        (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin_crops")
+
+
+# -----------------------------
+# REJECT CROP
+# -----------------------------
+@app.route("/reject_crop/<int:id>")
+def reject_crop(id):
+
+    conn = get_db()
+
+    conn.execute(
+        "UPDATE crops SET status='rejected' WHERE id=?",
+        (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin_crops")
+
+
 # -----------------------------
 # CONSUMER REGISTER
 # -----------------------------
@@ -253,99 +375,7 @@ def consumer_dashboard():
 
 
 # -----------------------------
-# ADMIN LOGIN
-# -----------------------------
-@app.route("/admin_login", methods=["GET","POST"])
-def admin_login():
-
-    if request.method == "POST":
-
-        username = request.form["username"]
-        password = request.form["password"]
-
-        if username == "admin" and password == "admin123":
-            return redirect("/admin_dashboard")
-
-    return render_template("admin_login.html")
-
-
-# -----------------------------
-# ADMIN DASHBOARD
-# -----------------------------
-@app.route("/admin_dashboard")
-def admin_dashboard():
-
-    conn = get_db()
-
-    crops = conn.execute(
-        "SELECT * FROM crops"
-    ).fetchall()
-
-    conn.close()
-
-    return render_template("admin_dashboard.html", crops=crops)
-@app.route("/admin_crops")
-def admin_crop():
-
-    conn = get_db()
-
-    crops = conn.execute(
-        "SELECT * FROM crops"
-    ).fetchall()
-
-    conn.close()
-
-    return render_template("admin_crop.html", crops=crops)# -----------------------------
-# ADMIN APPROVE CROP
-# -----------------------------
-@app.route("/approve_crop/<int:id>")
-def approve_crop(id):
-
-    conn = get_db()
-
-    conn.execute(
-        "UPDATE crops SET status='approved' WHERE id=?",
-        (id,)
-    )
-
-    conn.commit()
-    conn.close()
-
-    return redirect("/admin_crops")
-
-@app.route("/reject_crop/<int:id>")
-def reject_crop(id):
-
-    conn = get_db()
-
-    conn.execute(
-    "UPDATE crops SET status='rejected' WHERE id=?",
-    (id,)
-    )
-
-    conn.commit()
-    conn.close()
-
-    return redirect("/admin_crops")
-
-@app.route("/publish_crop/<int:id>")
-def publish_crop(id):
-
-    conn = get_db()
-
-    conn.execute(
-        "UPDATE crops SET status='published' WHERE id=?",
-        (id,)
-    )
-
-    conn.commit()
-    conn.close()
-
-    return redirect("/admin_crops")
-
-
-# -----------------------------
-# Run App
+# RUN APP
 # -----------------------------
 if __name__ == "__main__":
 
