@@ -4,33 +4,47 @@
 
 <title>Admin Dashboard</title>
 
-<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 
 </head>
 
 <body>
 
-<div class="dashboard">
+<h1 class="title">Admin Crop Management</h1>
 
-<h1>Admin Dashboard</h1>
+<div class="menu">
 
-<h3>System Management</h3>
+<a href="/admin_crops">
+<button class="btn">View Farmer Crops</button>
+</a>
 
-<ul>
+<a href="/admin_crops">
+<button class="btn">Approve / Publish Crops</button>
+</a>
 
-<li>
-<a href="/view_crops">View Uploaded Crops</a>
-</li>
+<a href="/consumer_dashboard">
+<button class="btn">Upload Crops to Consumer</button>
+</a>
 
-<li>
-View Farmers
-</li>
+</div>
 
-<li>
-View Consumers
-</li>
+<div class="crop-container">
 
-</ul>
+{% for crop in crops %}
+
+<div class="crop-card">
+
+<img src="/static/uploads/{{crop.image}}">
+
+<h3>{{crop.crop_name}}</h3>
+
+<p>₹ {{crop.price}}</p>
+
+<span class="status">{{crop.status}}</span>
+
+</div>
+
+{% endfor %}
 
 </div>
 

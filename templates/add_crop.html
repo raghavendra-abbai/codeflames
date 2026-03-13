@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Add Crop</title>
-<link rel="stylesheet" href="/static/css/style.css">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_crop.css') }}">
+
 </head>
 
 <body>
 
-<div class="container">
+<div class="form-container">
 
-<h2>Add Crop</h2>
+<h2>Add Crop Details</h2>
 
 <form method="POST" enctype="multipart/form-data">
 
-<input type="text" name="crop_name" placeholder="Crop Name">
+<label>Crop Name</label>
+<input type="text" name="crop_name" required>
 
-<input type="number" name="price" placeholder="Price">
+<label>Crop Price (₹)</label>
+<input type="number" name="price" required>
 
-<input type="file" name="image">
+<label>Quantity (Kg)</label>
+<input type="number" name="quantity" required>
+
+<label>Farm Location</label>
+<input type="text" name="location" placeholder="Village / District">
+
+<label>Description</label>
+<textarea name="description" rows="3"></textarea>
+
+<label>Upload Crop Image</label>
+<input type="file" name="image" accept="image/*" required>
 
 <button type="submit">Upload Crop</button>
 

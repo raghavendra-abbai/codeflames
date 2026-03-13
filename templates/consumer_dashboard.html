@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Consumer Dashboard</title>
+
+<title>Consumer Marketplace</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/consumer.css') }}">
+
 </head>
 
 <body>
 
-<h1>Consumer Dashboard</h1>
+<h1 class="title">Fresh Crops Marketplace</h1>
 
-<p>Track agricultural products and view supply chain details.</p>
+<div class="container">
 
-<a href="/track">Track Product</a>
+{% for crop in crops %}
+
+<div class="card">
+
+<img src="/static/uploads/{{crop.image}}" alt="crop">
+
+<h2>{{crop.crop_name}}</h2>
+
+<p class="price">₹{{crop.price}}</p>
+
+<button class="buy">Buy Now</button>
+
+</div>
+
+{% endfor %}
+
+</div>
 
 </body>
 </html>

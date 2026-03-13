@@ -45,16 +45,17 @@ def init_db():
     )
     """)
 
-
     # Crops table
     conn.execute("""
-    CREATE TABLE IF NOT EXISTS crops(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        crop_name TEXT,
-        price REAL,
-        image TEXT
-    )
-    """)
+CREATE TABLE IF NOT EXISTS crops(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+farmer_id INTEGER,
+crop_name TEXT,
+price REAL,
+image TEXT,
+status TEXT
+)
+""")
 
     conn.commit()
     conn.close()
@@ -131,13 +132,16 @@ def farmer_login():
     return render_template("farmer_login.html")
 
 
+# -----------------------------
+# FARMER DASHBOARD
+# -----------------------------
 @app.route("/farmer_dashboard")
 def farmer_dashboard():
 
     conn = get_db()
 
     crops = conn.execute(
-        "SELECT * FROM crops WHERE farmer_id=1"
+        "SELECT * FROM crops"
     ).fetchall()
 
     conn.close()
@@ -155,6 +159,9 @@ def add_crop():
 
         crop_name = request.form["crop_name"]
         price = request.form["price"]
+        quantity = request.form["quantity"]
+        location = request.form["location"]
+        description = request.form["description"]
 
         image = request.files["image"]
 
@@ -164,8 +171,8 @@ def add_crop():
         conn = get_db()
 
         conn.execute(
-            "INSERT INTO crops (farmer_id,crop_name,price,image) VALUES (?,?,?,?)",
-            (1, crop_name, price, image.filename)
+        "INSERT INTO crops (crop_name,price,image,status) VALUES (?,?,?,?)",
+        (crop_name,price,image.filename,"pending")
         )
 
         conn.commit()
@@ -228,9 +235,21 @@ def consumer_login():
     return render_template("consumer_login.html")
 
 
+# -----------------------------
+# CONSUMER DASHBOARD
+# -----------------------------
 @app.route("/consumer_dashboard")
 def consumer_dashboard():
-    return render_template("consumer_dashboard.html")
+
+    conn = get_db()
+
+    crops = conn.execute(
+        "SELECT * FROM crops WHERE status='approved'"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template("consumer_dashboard.html", crops=crops)
 
 
 # -----------------------------
@@ -250,12 +269,11 @@ def admin_login():
     return render_template("admin_login.html")
 
 
+# -----------------------------
+# ADMIN DASHBOARD
+# -----------------------------
 @app.route("/admin_dashboard")
 def admin_dashboard():
-    return render_template("admin_dashboard.html")
-
-@app.route("/view_crops")
-def view_crops():
 
     conn = get_db()
 
@@ -265,7 +283,66 @@ def view_crops():
 
     conn.close()
 
-    return render_template("view_crops.html", crops=crops)
+    return render_template("admin_dashboard.html", crops=crops)
+@app.route("/admin_crops")
+def admin_crop():
+
+    conn = get_db()
+
+    crops = conn.execute(
+        "SELECT * FROM crops"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template("admin_crop.html", crops=crops)# -----------------------------
+# ADMIN APPROVE CROP
+# -----------------------------
+@app.route("/approve_crop/<int:id>")
+def approve_crop(id):
+
+    conn = get_db()
+
+    conn.execute(
+        "UPDATE crops SET status='approved' WHERE id=?",
+        (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin_crops")
+
+@app.route("/reject_crop/<int:id>")
+def reject_crop(id):
+
+    conn = get_db()
+
+    conn.execute(
+    "UPDATE crops SET status='rejected' WHERE id=?",
+    (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin_crops")
+
+@app.route("/publish_crop/<int:id>")
+def publish_crop(id):
+
+    conn = get_db()
+
+    conn.execute(
+        "UPDATE crops SET status='published' WHERE id=?",
+        (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin_crops")
+
 
 # -----------------------------
 # Run App

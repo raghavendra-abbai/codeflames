@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Admin Crop Approval</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_crops.css') }}">
+
+</head>
+
+<body>
+
+<h1 class="title">Farmer Uploaded Crops</h1>
+
+<div class="table-container">
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Crop</th>
+<th>Price</th>
+<th>Image</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for crop in crops %}
+
+<tr>
+
+<td>{{crop.id}}</td>
+
+<td>{{crop.crop_name}}</td>
+
+<td>₹{{crop.price}}</td>
+
+<td>
+<img src="/static/uploads/{{crop.image}}" class="cropimg">
+</td>
+
+<td>
+<span class="status {{crop.status}}">
+{{crop.status}}
+</span>
+</td>
+
+<td>
+
+<a href="/approve_crop/{{crop.id}}" class="approve">Accept</a>
+
+<a href="/reject_crop/{{crop.id}}" class="reject">Reject</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

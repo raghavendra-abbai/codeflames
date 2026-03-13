@@ -4,52 +4,33 @@
 
 <title>Farmer Dashboard</title>
 
-<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/farmer.css') }}">
 
 </head>
 
 <body>
 
-<div class="dashboard">
+<h1 class="title">Farmer Uploaded Crops</h1>
 
-<h1>Farmer Dashboard</h1>
+<a href="/add_crop" class="addbtn">+ Add New Crop</a>
 
-<a href="/add_crop">
-<button>Add Crop</button>
-</a>
-
-<h2>Your Uploaded Crops</h2>
-
-<table border="1" width="100%">
-
-<tr>
-
-<th>ID</th>
-<th>Crop</th>
-<th>Price</th>
-<th>Image</th>
-
-</tr>
+<div class="container">
 
 {% for crop in crops %}
 
-<tr>
+<div class="card">
 
-<td>{{crop.id}}</td>
+<img src="/static/uploads/{{crop.image}}" alt="crop">
 
-<td>{{crop.crop_name}}</td>
+<h3>{{crop.crop_name}}</h3>
 
-<td>₹{{crop.price}}</td>
+<p class="price">₹{{crop.price}}</p>
 
-<td>
-<img src="/static/uploads/{{crop.image}}" width="100">
-</td>
+<p class="status">{{crop.status}}</p>
 
-</tr>
+</div>
 
 {% endfor %}
-
-</table>
 
 </div>
 
