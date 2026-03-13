@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Farmer Dashboard</title>
+
+<link rel="stylesheet" href="/static/css/style.css">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<h1>Farmer Dashboard</h1>
+
+<a href="/add_crop">
+<button>Add Crop</button>
+</a>
+
+<h2>Your Uploaded Crops</h2>
+
+<table border="1" width="100%">
+
+<tr>
+
+<th>ID</th>
+<th>Crop</th>
+<th>Price</th>
+<th>Image</th>
+
+</tr>
+
+{% for crop in crops %}
+
+<tr>
+
+<td>{{crop.id}}</td>
+
+<td>{{crop.crop_name}}</td>
+
+<td>₹{{crop.price}}</td>
+
+<td>
+<img src="/static/uploads/{{crop.image}}" width="100">
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

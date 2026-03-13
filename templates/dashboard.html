@@ -1,38 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Dashboard</title>
+
+<title>Farmer Dashboard</title>
+
+<link rel="stylesheet" href="/static/css/style.css">
+
 </head>
 
 <body>
 
-<h2>Supply Chain Dashboard</h2>
+<div class="dashboard">
 
-<table border="1">
+<h1>Farmer Dashboard</h1>
 
-<tr>
-<th>ID</th>
-<th>Farmer</th>
-<th>Crop</th>
-<th>Quantity</th>
-<th>Price</th>
-<th>Date</th>
-</tr>
+<ul>
 
-{% for p in products %}
+<li>Add Crop</li>
+<li>View Supply Chain</li>
+<li>Track Products</li>
 
-<tr>
-<td>{{p.id}}</td>
-<td>{{p.farmer}}</td>
-<td>{{p.crop}}</td>
-<td>{{p.quantity}}</td>
-<td>{{p.price}}</td>
-<td>{{p.date}}</td>
-</tr>
+</ul>
 
-{% endfor %}
-
-</table>
+</div>
 
 </body>
 </html>
