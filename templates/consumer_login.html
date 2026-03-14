@@ -1,28 +1,36 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
 <title>Consumer Login</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
 </head>
 
 <body>
 
-<h2>Consumer Login</h2>
+<div class="login-container">
+
+<h1>Consumer Login</h1>
 
 <form method="POST">
 
-Email<br>
-<input type="email" name="email" required><br><br>
+<label>Email</label>
+<input type="email" name="email" required>
 
-Password<br>
-<input type="password" name="password" required><br><br>
+<label>Password</label>
+<input type="password" name="password" required>
 
 <button type="submit">Login</button>
 
-</form>
-
-<br>
-
 <a href="/consumer_register">Create Account</a>
 
+</form>
+
+</div>
+
 </body>
+
 </html>

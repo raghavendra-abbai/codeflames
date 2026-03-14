@@ -1,34 +1,42 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Consumer Register</title>
+
+<title>Consumer Registration</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
 </head>
 
 <body>
 
-<h2>Consumer Registration</h2>
+<div class="login-container">
+
+<h1>Consumer Registration</h1>
 
 <form method="POST">
 
-Name<br>
-<input type="text" name="name" required><br><br>
+<label>Name</label>
+<input type="text" name="name" required>
 
-Email<br>
-<input type="email" name="email" required><br><br>
+<label>Email</label>
+<input type="email" name="email" required>
 
-Mobile Number<br>
-<input type="text" name="mobile" required><br><br>
+<label>Mobile Number</label>
+<input type="text" name="mobile" required>
 
-Password<br>
-<input type="password" name="password" required><br><br>
+<label>Password</label>
+<input type="password" name="password" required>
 
 <button type="submit">Register</button>
 
-</form>
-
-<br>
-
 <a href="/consumer_login">Already Registered? Login</a>
 
+</form>
+
+</div>
+
 </body>
+
 </html>

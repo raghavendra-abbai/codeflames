@@ -66,7 +66,6 @@ def get_db():
 
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
-
     return conn
 
 
@@ -76,7 +75,6 @@ def get_db():
 def has_geotag(image_path):
 
     try:
-
         image = Image.open(image_path)
         exif_data = image._getexif()
 
@@ -84,7 +82,6 @@ def has_geotag(image_path):
             return False
 
         for tag_id in exif_data:
-
             tag = TAGS.get(tag_id, tag_id)
 
             if tag == "GPSInfo":
@@ -166,9 +163,7 @@ def farmer_dashboard():
 
     conn = get_db()
 
-    crops = conn.execute(
-        "SELECT * FROM crops"
-    ).fetchall()
+    crops = conn.execute("SELECT * FROM crops").fetchall()
 
     conn.close()
 
@@ -189,10 +184,8 @@ def add_crop():
         image = request.files["image"]
 
         image_path = os.path.join(app.config["UPLOAD_FOLDER"], image.filename)
-
         image.save(image_path)
 
-        # check geo tag
         if not has_geotag(image_path):
 
             os.remove(image_path)
@@ -236,33 +229,37 @@ def admin_login():
 # -----------------------------
 @app.route("/admin_dashboard")
 def admin_dashboard():
-
-    conn = get_db()
-
-    crops = conn.execute(
-        "SELECT * FROM crops"
-    ).fetchall()
-
-    conn.close()
-
-    return render_template("admin_dashboard.html", crops=crops)
+    return render_template("admin_dashboard.html")
 
 
 # -----------------------------
-# ADMIN VIEW CROPS
+# VIEW FARMER CROPS (NO ACTION)
 # -----------------------------
-@app.route("/admin_crops")
-def admin_crops():
+@app.route("/view_farmer_crops")
+def view_farmer_crops():
 
     conn = get_db()
 
-    crops = conn.execute(
-        "SELECT * FROM crops"
-    ).fetchall()
+    crops = conn.execute("SELECT * FROM crops").fetchall()
 
     conn.close()
 
-    return render_template("admin_crops.html", crops=crops)
+    return render_template("admin_crop.html", crops=crops, mode="view")
+
+
+# -----------------------------
+# APPROVE / PUBLISH CROPS
+# -----------------------------
+@app.route("/admin_crop")
+def admin_crop():
+
+    conn = get_db()
+
+    crops = conn.execute("SELECT * FROM crops").fetchall()
+
+    conn.close()
+
+    return render_template("admin_crop.html", crops=crops, mode="action")
 
 
 # -----------------------------
@@ -281,7 +278,7 @@ def approve_crop(id):
     conn.commit()
     conn.close()
 
-    return redirect("/admin_crops")
+    return redirect("/admin_crop")
 
 
 # -----------------------------
@@ -300,7 +297,26 @@ def reject_crop(id):
     conn.commit()
     conn.close()
 
-    return redirect("/admin_crops")
+    return redirect("/admin_crop")
+
+
+# -----------------------------
+# PUBLISH CROP
+# -----------------------------
+@app.route("/publish_crop/<int:id>")
+def publish_crop(id):
+
+    conn = get_db()
+
+    conn.execute(
+        "UPDATE crops SET status='published' WHERE id=?",
+        (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin_crop")
 
 
 # -----------------------------
@@ -366,7 +382,7 @@ def consumer_dashboard():
     conn = get_db()
 
     crops = conn.execute(
-        "SELECT * FROM crops WHERE status='approved'"
+        "SELECT * FROM crops WHERE status='published'"
     ).fetchall()
 
     conn.close()
@@ -380,5 +396,4 @@ def consumer_dashboard():
 if __name__ == "__main__":
 
     init_db()
-
     app.run(debug=True)

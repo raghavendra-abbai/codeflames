@@ -10,21 +10,21 @@
 
 <body>
 
-<h1 class="title">Fresh Crops Marketplace</h1>
+<h1>Fresh Crops Marketplace</h1>
 
-<div class="container">
+<div class="crop-container">
 
 {% for crop in crops %}
 
-<div class="card">
+<div class="crop-card">
 
-<img src="/static/uploads/{{crop.image}}" alt="crop">
+<img src="{{ url_for('static', filename='uploads/' + crop.image) }}" class="crop-image">
 
-<h2>{{crop.crop_name}}</h2>
+<h3>{{ crop.crop_name }}</h3>
 
-<p class="price">₹{{crop.price}}</p>
+<p>₹{{ crop.price }}</p>
 
-<button class="buy">Buy Now</button>
+<button class="buy-btn">Buy Now</button>
 
 </div>
 

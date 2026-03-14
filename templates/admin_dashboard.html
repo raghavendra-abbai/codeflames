@@ -14,37 +14,13 @@
 
 <div class="menu">
 
-<a href="/admin_crops">
-<button class="btn">View Farmer Crops</button>
+<a href="/view_farmer_crops">
+<button class="btn">View Farmer Crop</button>
 </a>
 
-<a href="/admin_crops">
-<button class="btn">Approve / Publish Crops</button>
+<a href="/admin_crop">
+<button class="btn">Approve / Publish Crop</button>
 </a>
-
-<a href="/consumer_dashboard">
-<button class="btn">Upload Crops to Consumer</button>
-</a>
-
-</div>
-
-<div class="crop-container">
-
-{% for crop in crops %}
-
-<div class="crop-card">
-
-<img src="/static/uploads/{{crop.image}}">
-
-<h3>{{crop.crop_name}}</h3>
-
-<p>₹ {{crop.price}}</p>
-
-<span class="status">{{crop.status}}</span>
-
-</div>
-
-{% endfor %}
 
 </div>
 

@@ -76,3 +76,32 @@ color:#2ecc71;
 border-radius:5px;
 font-size:12px;
 }
+body{
+font-family: Arial;
+text-align:center;
+background:#f4f6f9;
+}
+
+.title{
+margin-top:50px;
+font-size:36px;
+}
+
+.menu{
+margin-top:40px;
+}
+
+.btn{
+background:#2f6fed;
+color:white;
+padding:12px 25px;
+border:none;
+border-radius:8px;
+font-size:16px;
+margin:10px;
+cursor:pointer;
+}
+
+.btn:hover{
+background:#1d4ed8;
+}
