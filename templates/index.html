@@ -1,10 +1,50 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+<title>Agri Blockchain Platform</title>
 
-<title>Agri Blockchain</title>
+<style>
 
-<link rel="stylesheet" href="/static/css/style.css">
+body{
+font-family: Arial;
+background: linear-gradient(135deg,#4facfe,#00f2fe);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 15px rgba(0,0,0,0.2);
+text-align:center;
+width:260px;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+button{
+width:100%;
+padding:10px;
+margin:8px 0;
+border:none;
+border-radius:6px;
+background:#2f6fed;
+color:white;
+font-size:14px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+</style>
 
 </head>
 
@@ -12,21 +52,18 @@
 
 <div class="container">
 
-<h1>Agri Blockchain Platform</h1>
+<h2>Agri Blockchain Platform</h2>
 
-<div class="nav-buttons">
+<a href="/admin_login">
+<button>Admin Login</button>
+</a>
 
-<a href="/admin_login">Admin Login</a>
-
-<a href="/farmer_register">Farmer Register</a>
-<a href="/farmer_login">Farmer Login</a>
-
-<a href="/consumer_register">Consumer Register</a>
-<a href="/consumer_login">Consumer Login</a>
-
-</div>
+<a href="/user_portal">
+<button>Farmer / Consumer Portal</button>
+</a>
 
 </div>
 
 </body>
+
 </html>

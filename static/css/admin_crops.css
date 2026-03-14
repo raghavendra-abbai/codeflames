@@ -76,3 +76,24 @@ background:#27ae60;
 .status.rejected{
 background:#e74c3c;
 }
+
+.btn{
+padding:6px 12px;
+border-radius:6px;
+text-decoration:none;
+color:white;
+font-size:14px;
+margin-right:5px;
+}
+
+.approve{
+background:green;
+}
+
+.reject{
+background:red;
+}
+
+.publish{
+background:blue;
+}

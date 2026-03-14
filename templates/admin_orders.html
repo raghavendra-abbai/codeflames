@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Customer Orders</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f4f6f9;
+text-align:center;
+}
+
+h1{
+margin-top:40px;
+}
+
+table{
+margin:auto;
+margin-top:40px;
+border-collapse:collapse;
+width:80%;
+background:white;
+}
+
+th, td{
+padding:12px;
+border:1px solid #ccc;
+}
+
+th{
+background:#2f6fed;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Customer Orders</h1>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Crop</th>
+<th>Price</th>
+<th>Quantity</th>
+<th>Customer Name</th>
+<th>Mobile</th>
+<th>Address</th>
+</tr>
+
+{% for order in orders %}
+
+<tr>
+
+<td>{{order.id}}</td>
+<td>{{order.crop_name}}</td>
+<td>₹{{order.price}}</td>
+<td>{{order.quantity}}</td>
+<td>{{order.customer_name}}</td>
+<td>{{order.mobile}}</td>
+<td>{{order.address}}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

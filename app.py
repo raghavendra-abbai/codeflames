@@ -25,6 +25,7 @@ def init_db():
 
     conn = sqlite3.connect(DATABASE)
 
+    # Farmers
     conn.execute("""
     CREATE TABLE IF NOT EXISTS farmers(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,6 +36,7 @@ def init_db():
     )
     """)
 
+    # Consumers
     conn.execute("""
     CREATE TABLE IF NOT EXISTS consumers(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,6 +47,7 @@ def init_db():
     )
     """)
 
+    # Crops
     conn.execute("""
     CREATE TABLE IF NOT EXISTS crops(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,6 +55,20 @@ def init_db():
         price REAL,
         image TEXT,
         status TEXT
+    )
+    """)
+
+    # Orders
+    conn.execute("""
+    CREATE TABLE IF NOT EXISTS orders(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        crop_id INTEGER,
+        crop_name TEXT,
+        price REAL,
+        quantity INTEGER,
+        customer_name TEXT,
+        mobile TEXT,
+        address TEXT
     )
     """)
 
@@ -70,11 +87,12 @@ def get_db():
 
 
 # -----------------------------
-# GEO TAG CHECK
+# Check GeoTag
 # -----------------------------
 def has_geotag(image_path):
 
     try:
+
         image = Image.open(image_path)
         exif_data = image._getexif()
 
@@ -82,6 +100,7 @@ def has_geotag(image_path):
             return False
 
         for tag_id in exif_data:
+
             tag = TAGS.get(tag_id, tag_id)
 
             if tag == "GPSInfo":
@@ -94,7 +113,7 @@ def has_geotag(image_path):
 
 
 # -----------------------------
-# HOME PAGE
+# Home Page
 # -----------------------------
 @app.route("/")
 def index():
@@ -102,7 +121,7 @@ def index():
 
 
 # -----------------------------
-# FARMER REGISTER
+# Farmer Register
 # -----------------------------
 @app.route("/farmer_register", methods=["GET","POST"])
 def farmer_register():
@@ -130,7 +149,7 @@ def farmer_register():
 
 
 # -----------------------------
-# FARMER LOGIN
+# Farmer Login
 # -----------------------------
 @app.route("/farmer_login", methods=["GET","POST"])
 def farmer_login():
@@ -156,7 +175,7 @@ def farmer_login():
 
 
 # -----------------------------
-# FARMER DASHBOARD
+# Farmer Dashboard
 # -----------------------------
 @app.route("/farmer_dashboard")
 def farmer_dashboard():
@@ -171,7 +190,7 @@ def farmer_dashboard():
 
 
 # -----------------------------
-# ADD CROP
+# Add Crop
 # -----------------------------
 @app.route("/add_crop", methods=["GET","POST"])
 def add_crop():
@@ -208,7 +227,7 @@ def add_crop():
 
 
 # -----------------------------
-# ADMIN LOGIN
+# Admin Login
 # -----------------------------
 @app.route("/admin_login", methods=["GET","POST"])
 def admin_login():
@@ -225,7 +244,7 @@ def admin_login():
 
 
 # -----------------------------
-# ADMIN DASHBOARD
+# Admin Dashboard
 # -----------------------------
 @app.route("/admin_dashboard")
 def admin_dashboard():
@@ -233,7 +252,7 @@ def admin_dashboard():
 
 
 # -----------------------------
-# VIEW FARMER CROPS (NO ACTION)
+# View Farmer Crops
 # -----------------------------
 @app.route("/view_farmer_crops")
 def view_farmer_crops():
@@ -248,7 +267,7 @@ def view_farmer_crops():
 
 
 # -----------------------------
-# APPROVE / PUBLISH CROPS
+# Approve / Publish Crops
 # -----------------------------
 @app.route("/admin_crop")
 def admin_crop():
@@ -263,7 +282,7 @@ def admin_crop():
 
 
 # -----------------------------
-# APPROVE CROP
+# Approve Crop
 # -----------------------------
 @app.route("/approve_crop/<int:id>")
 def approve_crop(id):
@@ -282,7 +301,7 @@ def approve_crop(id):
 
 
 # -----------------------------
-# REJECT CROP
+# Reject Crop
 # -----------------------------
 @app.route("/reject_crop/<int:id>")
 def reject_crop(id):
@@ -301,7 +320,7 @@ def reject_crop(id):
 
 
 # -----------------------------
-# PUBLISH CROP
+# Publish Crop
 # -----------------------------
 @app.route("/publish_crop/<int:id>")
 def publish_crop(id):
@@ -320,7 +339,7 @@ def publish_crop(id):
 
 
 # -----------------------------
-# CONSUMER REGISTER
+# Consumer Register
 # -----------------------------
 @app.route("/consumer_register", methods=["GET","POST"])
 def consumer_register():
@@ -348,7 +367,7 @@ def consumer_register():
 
 
 # -----------------------------
-# CONSUMER LOGIN
+# Consumer Login
 # -----------------------------
 @app.route("/consumer_login", methods=["GET","POST"])
 def consumer_login():
@@ -374,16 +393,24 @@ def consumer_login():
 
 
 # -----------------------------
-# CONSUMER DASHBOARD
+# Consumer Dashboard
 # -----------------------------
 @app.route("/consumer_dashboard")
 def consumer_dashboard():
 
+    search = request.args.get("search")
+
     conn = get_db()
 
-    crops = conn.execute(
-        "SELECT * FROM crops WHERE status='published'"
-    ).fetchall()
+    if search:
+        crops = conn.execute(
+            "SELECT * FROM crops WHERE status='published' AND crop_name LIKE ?",
+            ('%' + search + '%',)
+        ).fetchall()
+    else:
+        crops = conn.execute(
+            "SELECT * FROM crops WHERE status='published'"
+        ).fetchall()
 
     conn.close()
 
@@ -391,7 +418,64 @@ def consumer_dashboard():
 
 
 # -----------------------------
-# RUN APP
+# Buy Crop
+# -----------------------------
+@app.route("/buy_crop/<int:id>", methods=["GET","POST"])
+def buy_crop(id):
+
+    conn = get_db()
+
+    crop = conn.execute(
+        "SELECT * FROM crops WHERE id=?",
+        (id,)
+    ).fetchone()
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        mobile = request.form["mobile"]
+        quantity = request.form["quantity"]
+        address = request.form["address"]
+
+        conn.execute(
+            "INSERT INTO orders (crop_id,crop_name,price,quantity,customer_name,mobile,address) VALUES (?,?,?,?,?,?,?)",
+            (crop["id"], crop["crop_name"], crop["price"], quantity, name, mobile, address)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return """
+        <script>
+        alert("Order placed successfully!");
+        window.location="/consumer_dashboard";
+        </script>
+        """
+
+    return render_template("buy_crop.html", crop=crop)
+
+# -----------------------------
+# ADMIN VIEW ORDERS
+# -----------------------------
+@app.route("/admin_orders")
+def admin_orders():
+
+    conn = get_db()
+
+    orders = conn.execute(
+        "SELECT * FROM orders"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template("admin_orders.html", orders=orders)
+@app.route("/user_portal")
+def user_portal():
+    return render_template("user_portal.html")
+
+
+# -----------------------------
+# Run App
 # -----------------------------
 if __name__ == "__main__":
 
