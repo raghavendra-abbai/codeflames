@@ -22,36 +22,58 @@
 <th>Price</th>
 <th>Image</th>
 <th>Status</th>
+
+{% if mode == "action" %}
 <th>Action</th>
+{% endif %}
+
 </tr>
 
 {% for crop in crops %}
 
 <tr>
 
-<td>{{crop.id}}</td>
+<td>{{ crop.id }}</td>
 
-<td>{{crop.crop_name}}</td>
+<td>{{ crop.crop_name }}</td>
 
-<td>₹{{crop.price}}</td>
-
-<td>
-<img src="/static/uploads/{{crop.image}}" class="cropimg">
-</td>
+<td>₹{{ crop.price }}</td>
 
 <td>
-<span class="status {{crop.status}}">
-{{crop.status}}
-</span>
+<img src="{{ url_for('static', filename='uploads/' + crop.image) }}" width="80">
 </td>
 
 <td>
 
-<a href="/approve_crop/{{crop.id}}" class="approve">Accept</a>
+{% if crop.status == "approved" %}
+<span style="color:green;font-weight:bold;">Approved</span>
 
-<a href="/reject_crop/{{crop.id}}" class="reject">Reject</a>
+{% elif crop.status == "rejected" %}
+<span style="color:red;font-weight:bold;">Rejected</span>
+
+{% elif crop.status == "published" %}
+<span style="color:blue;font-weight:bold;">Published</span>
+
+{% else %}
+<span style="color:orange;font-weight:bold;">Pending</span>
+
+{% endif %}
 
 </td>
+
+{% if mode == "action" %}
+
+<td>
+
+<a href="/approve_crop/{{ crop.id }}">Approve</a>
+
+<a href="/reject_crop/{{ crop.id }}">Reject</a>
+
+<a href="/publish_crop/{{ crop.id }}">Upload to Consumer</a>
+
+</td>
+
+{% endif %}
 
 </tr>
 

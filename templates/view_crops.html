@@ -1,200 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>All Crops</title>
-
-<link rel="stylesheet" href="/static/css/style.css">
-
+<title>View Farmer Crops</title>
 </head>
 
 <body>
 
-<div class="dashboard">
+<h1>Farmer Uploaded Crops</h1>
 
-<h2>Uploaded Crop Details</h2>
-
-<table border="1" width="100%">
+<table border="1">
 
 <tr>
-
 <th>ID</th>
-<th>Crop Name</th>
+<th>Crop</th>
 <th>Price</th>
 <th>Image</th>
-
+<th>Status</th>
 </tr>
 
 {% for crop in crops %}
 
 <tr>
 
-<td>{{crop.id}}</td>
+<td>{{ crop.id }}</td>
 
-<td>{{crop.crop_name}}</td>
+<td>{{ crop.crop_name }}</td>
 
-<td>₹ {{crop.price}}</td>
+<td>₹{{ crop.price }}</td>
 
 <td>
-<img src="/static/uploads/{{crop.image}}" width="100">
+<img src="{{ url_for('static', filename='uploads/' + crop.image) }}" width="80">
 </td>
+
+<td>{{ crop.status }}</td>
 
 </tr>
 
 {% endfor %}
 
 </table>
-<!DOCTYPE html>
-<html>
-<head>
-
-<title>All Crops</title>
-
-<link rel="stylesheet" href="/static/css/style.css">
-
-</head>
-
-<body>
-
-<div class="dashboard">
-
-<h2>Uploaded Crop Details</h2>
-
-<table border="1" width="100%">
-
-<tr>
-
-<th>ID</th>
-<th>Crop Name</th>
-<th>Price</th>
-<th>Image</th>
-
-</tr>
-
-{% for crop in crops %}
-
-<tr>
-
-<td>{{crop.id}}</td>
-
-<td>{{crop.crop_name}}</td>
-
-<td>₹ {{crop.price}}</td>
-
-<td>
-<img src="/static/uploads/{{crop.image}}" width="100">
-</td>
-
-</tr>
-
-{% endfor %}
-
-</table>
-
-</div>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-
-<title>All Crops</title>
-
-<link rel="stylesheet" href="/static/css/style.css">
-
-</head>
-
-<body>
-
-<div class="dashboard">
-
-<h2>Uploaded Crop Details</h2>
-
-<table border="1" width="100%">
-
-<tr>
-
-<th>ID</th>
-<th>Crop Name</th>
-<th>Price</th>
-<th>Image</th>
-
-</tr>
-
-{% for crop in crops %}
-
-<tr>
-
-<td>{{crop.id}}</td>
-
-<td>{{crop.crop_name}}</td>
-
-<td>₹ {{crop.price}}</td>
-
-<td>
-<img src="/static/uploads/{{crop.image}}" width="100">
-</td>
-
-</tr>
-
-{% endfor %}
-
-</table>
-
-</div>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-
-<title>All Crops</title>
-
-<link rel="stylesheet" href="/static/css/style.css">
-
-</head>
-
-<body>
-
-<div class="dashboard">
-
-<h2>Uploaded Crop Details</h2>
-
-<table border="1" width="100%">
-
-<tr>
-
-<th>ID</th>
-<th>Crop Name</th>
-<th>Price</th>
-<th>Image</th>
-
-</tr>
-
-{% for crop in crops %}
-
-<tr>
-
-<td>{{crop.id}}</td>
-
-<td>{{crop.crop_name}}</td>
-
-<td>₹ {{crop.price}}</td>
-
-<td>
-<img src="/static/uploads/{{crop.image}}" width="100">
-</td>
-
-</tr>
-
-{% endfor %}
-
-</table>
-
-</div>
-
-</body>
-</html></div>
 
 </body>
 </html>
