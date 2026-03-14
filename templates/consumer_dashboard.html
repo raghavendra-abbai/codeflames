@@ -9,8 +9,16 @@
 </head>
 
 <body>
+<form method="GET" action="/consumer_dashboard" class="search-box">
+
+<input type="text" name="search" placeholder="Search crops...">
+
+<button type="submit">Search</button>
+
+</form>
 
 <h1>Fresh Crops Marketplace</h1>
+
 
 <div class="crop-container">
 
@@ -24,7 +32,9 @@
 
 <p>₹{{ crop.price }}</p>
 
+<a href="/buy_crop/{{ crop.id }}">
 <button class="buy-btn">Buy Now</button>
+</a>
 
 </div>
 

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Delivery Details</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f4f6f9;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+width:350px;
+}
+
+h2{
+text-align:center;
+}
+
+.price{
+text-align:center;
+font-weight:bold;
+margin-bottom:20px;
+}
+
+input, textarea{
+width:100%;
+padding:8px;
+margin-top:5px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+background:#28a745;
+color:white;
+border:none;
+padding:10px;
+width:100%;
+border-radius:5px;
+cursor:pointer;
+font-size:16px;
+}
+
+button:hover{
+background:#218838;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Order {{ crop.crop_name }}</h2>
+
+<p class="price">Price: ₹{{ crop.price }}</p>
+
+<form method="POST">
+
+<label>Name</label>
+<input type="text" name="name" required>
+
+<label>Mobile</label>
+<input type="text" name="mobile" required>
+
+<label>Quantity</label>
+<input type="number" name="quantity" min="1" required>
+
+<label>Delivery Address</label>
+<textarea name="address" rows="3" required></textarea>
+
+<button type="submit">Place Order</button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>
