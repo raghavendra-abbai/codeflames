@@ -41,6 +41,8 @@ python app.py
 * Day 1: Project setup & basic code
 * Day 2: (user interface)
 * day 3: (login pages)
+* day 4: created deparate dashboard to the admin consumer farmer
+
 
 
 
