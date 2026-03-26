@@ -42,6 +42,7 @@ python app.py
 * Day 2: (user interface)
 * day 3: (login pages)
 * day 4: created deparate dashboard to the admin consumer farmer
+* day 5: implemented styleing properties to the each panel
 
 
 
