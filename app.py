@@ -73,9 +73,6 @@ def init_db():
     conn.close()
 
 
-# -----------------------------
-# Database Connection
-# -----------------------------
 def get_db():
 
     conn = sqlite3.connect(DATABASE)
