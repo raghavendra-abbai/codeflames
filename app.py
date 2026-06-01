@@ -12,9 +12,6 @@ UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
-# -----------------------------
-# Initialize Database
-# -----------------------------
 def init_db():
 
     if not os.path.exists("database"):
